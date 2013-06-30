@@ -1,0 +1,90 @@
+#!/bin/bash
+# run - run os161, and do some automagic
+#
+# Usage: run [debug | here] [test-"test command"] Assignment-number
+#     debug - automatically attach gdb. (uses Xterm to launch os161)
+#     here - run os161 in the current terminal
+#
+# Copyright © 2013 Eon S. Jeon <esjeon@live.com>
+# 
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the “Software”), to
+# deal in the Software without restriction, including without limitation the
+# rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+# sell copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+# 
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+# 
+# THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+# FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+# DEALINGS IN THE SOFTWARE.
+#
+
+### Constants
+ROOT="$HOME/cs350-os161/root"
+SRCTREE="$HOME/cs350-os161/os161-1.11/"
+SCRIPT=".gdbscript"
+
+
+### Parse arguments
+
+ASST="x"
+DEBUG=""
+TERM="xterm-colour -geometry 80x50 -e"
+AMP="&"
+
+for i; do
+	case "$i" in
+	debug)
+		DEBUG="-w"
+		TERM="xterm-colour -e"
+		AMP="&" ;;
+	here)
+		DEBUG=""
+		TERM=""
+		AMP="" ;;
+	[0-5])
+		ASST="$i" ;;
+	test-*)
+		TEST="${i#test-}; q"
+	esac
+done
+
+if [[ "${ASST}" = "x" ]]; then
+	echo Assignment number is not specified
+	exit 1
+fi
+
+
+### String Variables
+KERN="kernel-ASST${ASST}"
+SOCK=".sockets/gdb"
+OBJDIR="${SRCTREE}/kern/compile/ASST${ASST}/"
+CMD="${TERM} run-sys161 ${DEBUG} ${KERN} \"${TEST}\" ${AMP}"
+
+
+### Run emulator
+cd "${ROOT}"
+eval "${CMD}"
+
+### Run debugger
+if [[ "x${DEBUG}" != "x" ]]; then
+	# write a custom script for gdb
+	read -p "Press any key when the emulator is started..."
+
+	cat << EOF > "${SCRIPT}"
+dir ${OBJDIR}
+target remote unix:${SOCK}
+b panic
+EOF
+
+	# run debugger
+	cs350-gdb -x "${SCRIPT}" "${KERN}"
+	rm "${SCRIPT}"
+fi

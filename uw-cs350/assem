@@ -1,0 +1,3 @@
+#!/bin/bash
+
+cs350-objdump -D $1

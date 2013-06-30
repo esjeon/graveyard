@@ -1,0 +1,48 @@
+#!/bin/bash
+# compile - compile the kernel
+# 
+# Usage: compile Assignment-number
+#
+# Copyright © 2013 Eon S. Jeon <esjeon@live.com>
+# 
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the “Software”), to
+# deal in the Software without restriction, including without limitation the
+# rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+# sell copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+# 
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+# 
+# THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+# FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+# DEALINGS IN THE SOFTWARE.
+#
+
+SRCTREE="$HOME/cs350-os161/os161-1.11/" 
+CONF="${SRCTREE}/kern/conf"
+
+if [[ ! -f "${CONF}/ASST${1}" ]]; then
+	echo "Invalid assignment number $1"
+	exit 1
+fi
+
+if [[ "${2}" = "new" ]]; then
+	DO_CONF='./config ASST'"${1}"''
+	MAKE_DEP='make depend';
+	cd "${CONF}"
+	rm -rv "../compile/ASST${1}" 
+else
+	DO_CONF='echo (skipping config)'
+	MAKE_DEP='echo (skipping make depend)'
+fi
+
+cd "${CONF}" \
+	&& ${DO_CONF} \
+	&& cd "../compile/ASST${1}" \
+	&& ${MAKE_DEP} && make -j 3 && make install
