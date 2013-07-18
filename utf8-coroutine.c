@@ -44,7 +44,7 @@ utf8parse(unsigned char byte)
 	if (! (byte & 0x80)) // 0xxx xxxx
 		coReset(byte);
 	else if (! (byte & 0x40)) // 10xx xxxx (error)
-		coReset(0);
+		coReset('?');
 	else if (! (byte & 0x20)) // 110x xxxx
 	{
 		wc = byte & 0x1f;
@@ -64,6 +64,8 @@ utf8parse(unsigned char byte)
 	// read extra bytes
 	while(len--) {
 		coReturn(-1);
+		if ( (byte & 0xc0) != 0x80 ) /* 10xx xxxx */
+			coReset('?');
 		wc = (wc << 6) | (byte & 0x3f);
 	}
 	coReset(wc);
