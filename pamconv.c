@@ -1,4 +1,6 @@
 
+/* NOTE: misc_conv in PAM does the same thing, but in a much better way */
+
 #include <security/pam_appl.h>
 #include <security/pam_misc.h>
 #include <stdio.h>
