@@ -67,6 +67,6 @@ http_echo() {
 declare -fx http_echo
 
 while [[ $? -eq 0 ]]; do
-    netcat -lp9980 -e http_echo
+    netcat -lp9980 -c "bash -c http_echo"
 done
 
