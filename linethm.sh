@@ -13,7 +13,7 @@ get() {
 
 get_theme_url() {
 	get -O - "${page}" |\
-	grep -m1 -o "https://.*${target}" |\
+	grep -m1 -o "https://[^<> ]*${target}" |\
 	sed 's/WEBSTORE\/.*\.png/IOS\/theme.zip/'
 }
 
