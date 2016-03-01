@@ -75,6 +75,7 @@ utf8parse(unsigned char byte)
 	return -1;
 }
 
+#ifndef IMPORTING
 int main()
 {
 	char hexc[] = {'0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f'};
@@ -101,4 +102,4 @@ int main()
 	}
 	return 0;
 }
-
+#endif
