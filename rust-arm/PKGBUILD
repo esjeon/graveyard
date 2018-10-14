@@ -1,0 +1,56 @@
+# Written by Eon S. Jeon <esjeon@hyunmu.am>
+
+_target=arm-linux-gnueabi
+
+pkgname=${_target}-binutils
+pkgver=2.31.1
+pkgrel=2
+pkgdesc='A set of programs to assemble and manipulate binary and object files for the ARM target'
+arch=('x86_64')
+url='http://www.gnu.org/software/binutils/'
+license=(GPL)
+depends=(glibc zlib)
+source=(https://ftp.gnu.org/gnu/binutils/binutils-$pkgver.tar.bz2{,.sig})
+sha512sums=('b42954e6f49a0adcd2676bdd77dfb59bfc25cec8184b007521d1e2b1d5d0593b58639e3d9448d5a40fe024c3cea386a37743627d6bb16d502f52a4a32b9573bd'
+            'SKIP')
+validpgpkeys=(3A24BC1E8FB409FA9F14371813FCEF89DD9E3C4F)
+
+prepare() {
+  cd binutils-$pkgver
+  sed -i "/ac_cpp=/s/\$CPPFLAGS/\$CPPFLAGS -O2/" libiberty/configure
+}
+
+build() {
+  cd binutils-$pkgver
+
+  ./configure --target=$_target \
+              --with-sysroot=/usr/$_target \
+              --prefix=/usr \
+              --disable-multilib \
+              --disable-nls \
+              --enable-ld=default \
+              --enable-gold \
+              --enable-plugins \
+              --enable-deterministic-archives
+
+  make -j 12
+}
+
+check() {
+  cd binutils-$pkgver
+  make LDFLAGS="" -k check || true
+}
+
+package() {
+  cd binutils-$pkgver
+  make DESTDIR="$pkgdir" install
+
+  # avoid file confliction w/ base/binutils
+  rm "$pkgdir"/usr/share/info/as.info
+  rm "$pkgdir"/usr/share/info/bfd.info
+  rm "$pkgdir"/usr/share/info/binutils.info
+  rm "$pkgdir"/usr/share/info/gprof.info
+  rm "$pkgdir"/usr/share/info/ld.info
+  rm "$pkgdir"/usr/share/info/dir
+  rmdir "$pkgdir"/usr/share/info
+}
