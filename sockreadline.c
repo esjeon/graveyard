@@ -46,27 +46,24 @@ reader_readline(struct reader *reader, char *buf, size_t bufsize)
 		cnt = recv(reader->sock, reader->buf + reader->buflen,
 			reader->bufsize - reader->buflen, MSG_DONTWAIT);
 		if (cnt == 0) {
-			/* NOTE: discard remaining data in the buffer. */
-			return 0;
+			return 0; /* EOF */
 		} else if (cnt == -1) {
 			if (errno == EAGAIN || errno == EWOULDBLOCK)
 				return -2; /* no data available yet */
 			return -1;
 		}
 
-		if (reader->buflen + cnt > reader->bufsize)
-			return -1;
 		reader->buflen += cnt;
 	}
 
-	if (i + 1 >= bufsize)
+	if (++i >= bufsize)
 		return -3; /* buffer too small */
-	strncpy(buf, reader->buf, i + 1);
-	buf[i + 1] = '\0';
+	strncpy(buf, reader->buf, i);
+	buf[i] = '\0';
 
-	memmove(reader->buf, &reader->buf[i + 1], reader->buflen - i - 1);
-	reader->buflen = 0;
-	return i + 1;
+	reader->buflen -= i;
+	memmove(reader->buf, &reader->buf[i], reader->buflen);
+	return i;
 }
 
 int
@@ -108,18 +105,23 @@ main()
 			break;
 		}
 
-		rc = reader_readline(reader, buf, sizeof(buf));
-		if (rc == -1 || rc == -3) {
-			fprintf(stderr, "readline status=%d\n", rc);
-			break;
-		} else if (rc == 0) {
-			fprintf(stderr, "client disconnected\n");
-			break;
-		}
+		for(;;) {
+			rc = reader_readline(reader, buf, sizeof(buf));
+			if (rc == -1 || rc == -3) {
+				fprintf(stderr, "readline status=%d\n", rc);
+				goto stop;
+			} else if (rc == 0) {
+				fprintf(stderr, "client disconnected\n");
+				goto stop;
+			} else if (rc == -2) {
+				break;
+			}
 
-		fprintf(stderr, "%04d: %s", ++lineno, buf);
+			fprintf(stderr, "%04d (rc=%2d): %s", ++lineno, rc, buf);
+		}
 	}
 
+stop:
 	close(conn);
 	close(lsock);
 	unlink("test.sock");
