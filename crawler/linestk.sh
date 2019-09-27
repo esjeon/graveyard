@@ -18,6 +18,16 @@ get_sticker_url() {
 	sed 's/LINEStorePC\/main.png/iphone\/stickers@2x.zip/'
 }
 
+has_animation() {
+	grep -o 'hasAnimation":true' productInfo.meta &>/dev/null
+	return $?
+}
+
+get_animation_url() {
+	id="$1"
+	printf 'https://stickershop.line-scdn.net/stickershop/v1/sticker/%d/iPhone/sticker_animation@2x.png;compress=true' "$id"
+}
+
 sticker="$(get_sticker_url)"
 
 wget -O "stickers@2x.zip" "${sticker}"
@@ -26,8 +36,20 @@ mkdir stickers-$$
 cd stickers-$$
 
 7z x "../stickers@2x.zip"
-rm -vf *_key*.png productInfo.meta
+rename -v '@2x' '' *
+rm -vf *_key*.png tab_*.png
 
+if has_animation; then
+	# HACK: list sticker ids
+	ls [0-9]*.png |\
+		while read file; do
+			id="${file%.png}"
+			output="${id}-animation.png"
+			wget "$(get_animation_url "$id")" -O "$output"
+		done
+fi
+
+rm -vf productInfo.meta
 mv "../stickers@2x.zip" .
 
 cd ..
