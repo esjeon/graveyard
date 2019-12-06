@@ -1,0 +1,701 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 11.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[     32046,        693]
+NotebookOptionsPosition[     31215,        662]
+NotebookOutlinePosition[     31554,        677]
+CellTagsIndexPosition[     31511,        674]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+Cell[BoxData[
+ RowBox[{"Clear", "[", "\"\<`*\>\"", "]"}]], "Input",
+ CellChangeTimes->{{3.72613840784768*^9, 3.726138424639423*^9}, {
+  3.7262083292163763`*^9, 3.726208329880862*^9}}],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"SetDirectory", "[", 
+   RowBox[{"NotebookDirectory", "[", "]"}], "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"recipesRaw", "=", 
+   RowBox[{"Import", "[", 
+    RowBox[{"\"\<recipe.json\>\"", ",", " ", "\"\<JSON\>\""}], "]"}]}], 
+  ";"}]}], "Input",
+ CellChangeTimes->{{3.726137918564743*^9, 3.726137934892413*^9}, {
+   3.726137973231485*^9, 3.726138027245124*^9}, {3.72613808804427*^9, 
+   3.726138096141733*^9}, {3.7261382141703367`*^9, 3.726138214493363*^9}, {
+   3.726138394498691*^9, 3.72613839776184*^9}, {3.726138429066452*^9, 
+   3.726138445889202*^9}, {3.726139091742305*^9, 3.726139101595995*^9}, {
+   3.726139190547915*^9, 3.7261393281307077`*^9}, {3.7261422968473463`*^9, 
+   3.72614230027446*^9}, {3.726142377253647*^9, 3.726142382418912*^9}, {
+   3.7261424243805447`*^9, 3.726142484381616*^9}, {3.726142752291965*^9, 
+   3.726142756043476*^9}, 3.726208819079495*^9}],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"recipes", "=", 
+    RowBox[{"Association", "[", 
+     RowBox[{
+      RowBox[{
+       RowBox[{
+        RowBox[{"#", "\[LeftDoubleBracket]", "1", "\[RightDoubleBracket]"}], 
+        "\[Rule]", 
+        RowBox[{"Association", "[", 
+         RowBox[{"#", "\[LeftDoubleBracket]", "2", "\[RightDoubleBracket]"}], 
+         "]"}]}], "&"}], "/@", "recipesRaw"}], "]"}]}], ";"}], 
+  "\[IndentingNewLine]", 
+  RowBox[{"(*", " ", 
+   RowBox[{"remove", " ", "some", " ", "cycling", " ", "recipes"}], " ", 
+   "*)"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"recipes", "=", 
+   RowBox[{"Fold", "[", 
+    RowBox[{"Delete", ",", "recipes", ",", 
+     RowBox[{"ToUpperCase", "/@", 
+      RowBox[{"{", "\[IndentingNewLine]", 
+       RowBox[{
+       "\"\<basic-oil-processing\>\"", ",", "\[IndentingNewLine]", 
+        "\"\<advanced-oil-processing\>\"", ",", "\[IndentingNewLine]", 
+        "\"\<light-oil-cracking\>\"", ",", "\[IndentingNewLine]", 
+        "\"\<heavy-oil-cracking\>\"", ",", "\[IndentingNewLine]", 
+        "\"\<COAL-LIQUEFACTION\>\"", ",", "\[IndentingNewLine]", 
+        "\"\<SOLID-FUEL-FROM-LIGHT-OIL\>\"", ",", "\[IndentingNewLine]", 
+        "\"\<SOLID-FUEL-FROM-HEAVY-OIL\>\"", ",", "\[IndentingNewLine]", 
+        "\"\<kovarex-enrichment-process\>\""}], "\[IndentingNewLine]", 
+       "}"}]}]}], "]"}]}], ";"}]}], "Input",
+ CellChangeTimes->{{3.726142492307797*^9, 3.726142530211133*^9}, {
+  3.726142759988164*^9, 3.726142788687683*^9}, {3.7262082033308067`*^9, 
+  3.72620824806182*^9}, {3.7262087013772373`*^9, 3.726208707446381*^9}, {
+  3.72620875998381*^9, 3.7262088104845037`*^9}, {3.7262088568349323`*^9, 
+  3.726208864636878*^9}, {3.7262089270042152`*^9, 3.726208969855266*^9}, {
+  3.726212885248983*^9, 3.72621288572447*^9}, {3.7262135600100517`*^9, 
+  3.726213571361228*^9}, {3.726302538107874*^9, 3.726302542126848*^9}, {
+  3.7263025830817413`*^9, 3.726302587662505*^9}, {3.726302637867765*^9, 
+  3.726302642606688*^9}, {3.726302718633656*^9, 3.726302722497472*^9}, {
+  3.726302778107823*^9, 3.726302805477519*^9}}],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"itemRecipeMapping", "=", 
+   RowBox[{"Association", "@", 
+    RowBox[{"Flatten", "@", 
+     RowBox[{"Map", "[", "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{"Function", "[", 
+        RowBox[{"recipe", ",", "\[IndentingNewLine]", 
+         RowBox[{"Map", "[", "\[IndentingNewLine]", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"#", "\[Rule]", 
+             RowBox[{
+             "recipe", "\[LeftDoubleBracket]", "\"\<name\>\"", 
+              "\[RightDoubleBracket]"}]}], "&"}], ",", "\[IndentingNewLine]", 
+           
+           RowBox[{"recipe", "\[LeftDoubleBracket]", 
+            RowBox[{"\"\<results\>\"", ",", "All", ",", "1"}], 
+            "\[RightDoubleBracket]"}]}], "\[IndentingNewLine]", "]"}]}], 
+        "]"}], ",", "\[IndentingNewLine]", 
+       RowBox[{"Values", "@", "recipes"}]}], "\[IndentingNewLine]", 
+      "]"}]}]}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"hasItemRecipeQ", "[", "itemName_String", "]"}], ":=", 
+   RowBox[{"KeyExistsQ", "[", 
+    RowBox[{"itemRecipeMapping", ",", "itemName"}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"getItemRecipe", "[", 
+    RowBox[{"itemName_String", "?", "hasItemRecipeQ"}], "]"}], ":=", 
+   RowBox[{"recipes", "\[LeftDoubleBracket]", 
+    RowBox[{
+    "itemRecipeMapping", "\[LeftDoubleBracket]", "itemName", 
+     "\[RightDoubleBracket]"}], "\[RightDoubleBracket]"}]}], ";"}]}], "Input",\
+
+ CellChangeTimes->{{3.726215198789867*^9, 3.726215220426284*^9}, {
+  3.72621527299043*^9, 3.7262152817854843`*^9}, {3.7262153722448473`*^9, 
+  3.726215388122141*^9}, {3.726215419117198*^9, 3.7262154938120947`*^9}, {
+  3.726215528554328*^9, 3.726215594219824*^9}, {3.726215642968755*^9, 
+  3.726215798849329*^9}, {3.726215884589501*^9, 3.72621592347337*^9}, {
+  3.72621650764996*^9, 3.726216507946539*^9}, {3.7262171788317547`*^9, 
+  3.726217183510133*^9}, {3.726217425240967*^9, 3.726217425900666*^9}, {
+  3.7262174561685333`*^9, 3.726217514607357*^9}, {3.726217589424992*^9, 
+  3.7262175998452*^9}, {3.7262176356189117`*^9, 3.726217681933538*^9}, {
+  3.726217724314158*^9, 3.726217727144765*^9}, {3.726217767097856*^9, 
+  3.72621780750845*^9}, {3.7262179489557743`*^9, 3.726217949308646*^9}, {
+  3.726218043112236*^9, 3.726218093880191*^9}, {3.72621825239459*^9, 
+  3.7262182530301723`*^9}}],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"getRecipeInputEdges", "[", "recipe_", "]"}], ":=", 
+   RowBox[{"Map", "[", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"#", "\[LeftDoubleBracket]", "1", "\[RightDoubleBracket]"}], 
+         "\[Rule]", 
+         RowBox[{
+         "recipe", "\[LeftDoubleBracket]", "\"\<name\>\"", 
+          "\[RightDoubleBracket]"}]}], ",", 
+        RowBox[{"#", "\[LeftDoubleBracket]", "2", "\[RightDoubleBracket]"}]}],
+        "}"}], "&"}], ",", 
+     RowBox[{
+     "recipe", "\[LeftDoubleBracket]", "\"\<ingredients\>\"", 
+      "\[RightDoubleBracket]"}]}], "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"getRecipeOutputEdges", "[", "recipe_", "]"}], ":=", 
+   RowBox[{"Map", "[", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{
+         RowBox[{
+         "recipe", "\[LeftDoubleBracket]", "\"\<name\>\"", 
+          "\[RightDoubleBracket]"}], "\[Rule]", 
+         RowBox[{
+         "#", "\[LeftDoubleBracket]", "1", "\[RightDoubleBracket]"}]}], ",", 
+        RowBox[{"#", "\[LeftDoubleBracket]", "2", "\[RightDoubleBracket]"}]}],
+        "}"}], "&"}], ",", 
+     RowBox[{
+     "recipe", "\[LeftDoubleBracket]", "\"\<results\>\"", 
+      "\[RightDoubleBracket]"}]}], "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"getRecipeEdges", "[", "recipe_", "]"}], ":=", 
+   RowBox[{"Join", "[", 
+    RowBox[{
+     RowBox[{"getRecipeInputEdges", "[", "recipe", "]"}], ",", 
+     RowBox[{"getRecipeOutputEdges", "[", "recipe", "]"}]}], "]"}]}], 
+  ";"}]}], "Input",
+ CellChangeTimes->{{3.7262128986382713`*^9, 3.726212909184134*^9}, {
+  3.7262130405406513`*^9, 3.726213048063024*^9}, {3.726213086975456*^9, 
+  3.72621325787519*^9}, {3.726213322936942*^9, 3.72621333678507*^9}, {
+  3.726213367056048*^9, 3.726213526957034*^9}, {3.726214159831963*^9, 
+  3.726214173883648*^9}, {3.7262142660698566`*^9, 3.726214270850121*^9}, {
+  3.72621621229029*^9, 3.726216243160466*^9}, {3.726216510105493*^9, 
+  3.7262165772824*^9}, {3.72621662696635*^9, 3.726216628249004*^9}, {
+  3.726217220218462*^9, 3.726217222627516*^9}, {3.72621898872373*^9, 
+  3.726218994355551*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"getItemIngredients", "[", "itemName_String", "]"}], ":=", 
+   RowBox[{
+    RowBox[{"getRecipeInputEdges", "[", 
+     RowBox[{"getItemRecipe", "[", "itemName", "]"}], "]"}], 
+    "\[LeftDoubleBracket]", 
+    RowBox[{"All", ",", "1", ",", "1"}], "\[RightDoubleBracket]"}]}], 
+  ";"}]], "Input",
+ CellChangeTimes->{{3.726217071012673*^9, 3.726217231074052*^9}, {
+  3.726217431076436*^9, 3.726217431665091*^9}, {3.726218996693048*^9, 
+  3.726218997906405*^9}}],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"getDependencyGraphHelper", "[", 
+    RowBox[{"itemName_String", "?", "hasItemRecipeQ"}], "]"}], ":=", 
+   RowBox[{"With", "[", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"input", "=", 
+       RowBox[{"getItemIngredients", "[", "itemName", "]"}]}], "}"}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{"Join", "[", "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{"Map", "[", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"#", "\[Rule]", "itemName"}], "&"}], ",", "input"}], "]"}], 
+       ",", "\[IndentingNewLine]", 
+       RowBox[{"Join", "@@", 
+        RowBox[{"Map", "[", 
+         RowBox[{"getDependencyGraphHelper", ",", "input"}], "]"}]}]}], 
+      "\[IndentingNewLine]", "]"}]}], "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"getDependencyGraphHelper", "[", "itemName_String", "]"}], ":=", 
+    RowBox[{"{", "}"}]}], ";"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"getDependencyGraph", "[", 
+     RowBox[{"itemName_String", "?", "hasItemRecipeQ"}], "]"}], ":=", 
+    "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"getDependencyGraphHelper", "[", "itemName", "]"}], "//", 
+     "DeleteDuplicates"}]}], ";"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"getDependencyGraph", "[", "itemNames_List", "]"}], ":=", 
+   "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"Join", "@@", 
+     RowBox[{"Map", "[", 
+      RowBox[{"getDependencyGraphHelper", ",", "itemNames"}], "]"}]}], "//", 
+    "DeleteDuplicates"}]}], ";"}]}], "Input",
+ CellChangeTimes->{{3.726216110388221*^9, 3.726216159476698*^9}, {
+   3.726216637091386*^9, 3.726216681310013*^9}, {3.726216769290907*^9, 
+   3.7262168199874268`*^9}, {3.7262172755603848`*^9, 3.726217295690961*^9}, {
+   3.726217341043168*^9, 3.726217365525948*^9}, {3.726218115716277*^9, 
+   3.726218159504777*^9}, {3.726218247024397*^9, 3.72621824756568*^9}, {
+   3.726218304026527*^9, 3.726218307832601*^9}, {3.7262183407041883`*^9, 
+   3.726218512069213*^9}, {3.726218560829294*^9, 3.7262186312260923`*^9}, {
+   3.726218705108489*^9, 3.726218766085075*^9}, {3.726219000449061*^9, 
+   3.7262190838488007`*^9}, {3.726219643458946*^9, 3.7262197094577827`*^9}, {
+   3.726220194339734*^9, 3.726220206490299*^9}, {3.726220378089921*^9, 
+   3.726220380498207*^9}, 3.7262231605463133`*^9}],
+
+Cell[CellGroupData[{
+
+Cell["", "Section",
+ CellChangeTimes->{{3.726224318116096*^9, 3.7262243204109087`*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"getDependencyGraph", "[", 
+   RowBox[{"{", 
+    RowBox[{
+    "\"\<science-pack-1\>\"", ",", "\"\<science-pack-2\>\"", ",", 
+     "\"\<science-pack-3\>\""}], "}"}], "]"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"With", "[", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"blacklist", "=", 
+      RowBox[{"{", "\[IndentingNewLine]", 
+       RowBox[{
+       "\"\<iron-plate\>\"", ",", "\"\<copper-plate\>\"", ",", 
+        "\[IndentingNewLine]", "\"\<iron-gear-wheel\>\""}], 
+       "\[IndentingNewLine]", "}"}]}], "}"}], ",", "\[IndentingNewLine]", 
+    RowBox[{"Select", "[", 
+     RowBox[{"%", ",", 
+      RowBox[{
+       RowBox[{"\[Not]", 
+        RowBox[{"Or", "[", "\[IndentingNewLine]", 
+         RowBox[{"(*", 
+          RowBox[{
+           RowBox[{"MemberQ", "[", 
+            RowBox[{"blacklist", ",", 
+             RowBox[{
+             "#", "\[LeftDoubleBracket]", "1", "\[RightDoubleBracket]"}]}], 
+            "]"}], ","}], "*)"}], "\[IndentingNewLine]", 
+         RowBox[{"MemberQ", "[", 
+          RowBox[{"blacklist", ",", 
+           RowBox[{
+           "#", "\[LeftDoubleBracket]", "2", "\[RightDoubleBracket]"}]}], 
+          "]"}], "\[IndentingNewLine]", "]"}]}], "&"}]}], "]"}]}], "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{"Graph", "[", 
+  RowBox[{"%", ",", 
+   RowBox[{"VertexLabels", "\[Rule]", "\"\<Name\>\""}], ",", 
+   RowBox[{"AspectRatio", "\[Rule]", "Automatic"}]}], "]"}]}], "Input",
+ CellChangeTimes->{{3.726218163450316*^9, 3.7262181708968697`*^9}, {
+  3.726218638560988*^9, 3.72621866884807*^9}, {3.7262187751248693`*^9, 
+  3.7262187919921293`*^9}, {3.726219088543996*^9, 3.726219116724069*^9}, {
+  3.726219155459538*^9, 3.7262191823024*^9}, {3.726219587948497*^9, 
+  3.726219613500305*^9}, {3.726219715697172*^9, 3.726219738649995*^9}, {
+  3.726220072791315*^9, 3.726220073977512*^9}, {3.726223420460333*^9, 
+  3.726223590612768*^9}, {3.726223646361479*^9, 3.726223811473174*^9}, {
+  3.726223848049807*^9, 3.726224006800159*^9}, {3.726224048132139*^9, 
+  3.726224073444208*^9}, {3.726224118606786*^9, 3.726224309425997*^9}, {
+  3.726302477078191*^9, 3.72630248929391*^9}, {3.726302937962594*^9, 
+  3.726302941265375*^9}, {3.726302974872629*^9, 3.726302982206471*^9}}],
+
+Cell[BoxData[
+ GraphicsBox[
+  NamespaceBox["NetworkGraphics",
+   DynamicModuleBox[{Typeset`graph = HoldComplete[
+     Graph[{
+      "iron-gear-wheel", "science-pack-1", "copper-plate", "inserter", 
+       "science-pack-2", "transport-belt", "electronic-circuit", "iron-plate",
+        "copper-cable", "advanced-circuit", "science-pack-3", 
+       "electric-mining-drill", "engine-unit", "plastic-bar", "petroleum-gas",
+        "coal", "pipe", "steel-plate"}, {{{1, 2}, {3, 2}, {4, 5}, {6, 5}, {7, 
+       4}, {1, 4}, {8, 4}, {9, 7}, {8, 7}, {3, 9}, {1, 6}, {8, 6}, {10, 11}, {
+       12, 11}, {13, 11}, {9, 10}, {14, 10}, {7, 10}, {15, 14}, {16, 14}, {7, 
+       12}, {1, 12}, {8, 12}, {1, 13}, {17, 13}, {18, 13}, {8, 17}, {8, 18}}, 
+       Null}, {AspectRatio -> Automatic, VertexLabels -> {"Name"}}]]}, 
+    TagBox[GraphicsGroupBox[{
+       {Hue[0.6, 0.7, 0.5], Opacity[0.7], Arrowheads[Medium], 
+        ArrowBox[{{0., 2.}, {-2., 1.}}, 0.061894273127753294`], 
+        ArrowBox[{{0., 2.}, {1., 1.}}, 0.061894273127753294`], 
+        ArrowBox[{{0., 2.}, {0., 1.}}, 0.061894273127753294`], 
+        ArrowBox[{{0., 2.}, {2., 1.}}, 0.061894273127753294`], 
+        ArrowBox[{{0., 2.}, {3., 1.}}, 0.061894273127753294`], 
+        ArrowBox[BezierCurveBox[CompressedData["
+1:eJxTTMoPSmViYGBQBWIQDQEiDhBawMEl+M23kIlCDkvPXb1hM53f4WmJ3rrq
+QwIOP1x5j/wT4nc4dLLH+4Uar8OP1GUHXYv5HHLdMnbXcHA4LNJbeFFwB6/D
+xfj3q7doMjn8mv/3c9JDHoc72i5WCqLf7f/t3K1h+Z7b4d8iRhubNQ/s19Xc
+zp/ykMthh+3az8XL7u/nfhFzsmQHp8MHswYxwVU/94v8sTe9VczhsKch9GvF
+v1/7Xf7smZgTyOEwsezq7Ctaf/ZL/jYWWSjL4ZAjwcClov93/+QfS/aU32B3
+8E67ap/O/W//mi/83R8a2R30E0Jt5+3/tz/nfUk9txS7gzRbA9NJ7//7z7+4
+PPPEAjYHnojQ/ufr/++/+kDnlroYmwNz2NXHP1//319/vd5Bs4oVGi4MB0yM
+QYAZzr+iXntJvZYJzi+UOQ5EjA6MUL6QIAgwwuU3skZvYI1mgPMXfPGc/8Xz
+vz2Mf+8uCPyF82VBxhX+gfNjNoAM+A3nz5oJAj/h/PM3jr6eb/4Dzv98WCn1
+wctv9jD3sIOs3/AVLs8+L+8sf/cXOP9rT+yef5Wf4fxLYP99gvPByqd8hPMj
+Ev1KNA58gPMh1Ad7AAW22zQ=
+         "]], 0.061894273127753294`], 
+        ArrowBox[{{5., 4.}, {5., 3.}}, 0.061894273127753294`], 
+        ArrowBox[{{1., 1.}, {0., 0.}}, 0.061894273127753294`], 
+        ArrowBox[{{0., 1.}, {0., 0.}}, 0.061894273127753294`], 
+        ArrowBox[{{5., 2.}, {1., 1.}}, 0.061894273127753294`], 
+        ArrowBox[{{5., 2.}, {6., 1.}}, 0.061894273127753294`], 
+        ArrowBox[{{5., 2.}, {2., 1.}}, 0.061894273127753294`], 
+        ArrowBox[BezierCurveBox[CompressedData["
+1:eJxTTMoPSmViYGCQAWIQDQEcDjBafye/0koTdofpd9gnhsxid6j5vcpztx2b
+w/7aq0ti5dkdXh27WGYmx+pQ+jjDWrqfzaFEumWl1GVmh928h0J6X7I6yP88
++DA9lsmh/8+DD5v1WB1exHfLy+1lcPiy/ih/fxyLw4L5B45WPflr/0K9YKNc
+JbPDuomN4d0/f9rnpDy4mlTH5PBjauSX3J1f7etSxWqj8xgdiqySj99r/WK/
+rMJhXpQ4o8OBH8sn1JV9tg9ediJUeyuDw8ML6gG+3Z/sO96tW3zWncHhyqFH
+rN5HPtq3LnrG3zzvv/2cczc2lit+tOeYq83KN/2fvcUXzpDLiz7Yzzqjo25T
++dd+uXHZm1iPD/bmhq9KeV3/2L/qka0WF/pg/+hU8sfGX7/sIeECVD8TBH7C
++edvHH093/wHnP/5sFLqg5ff7BmhfPboDazRG77C5dnn5Z3l7/4C53/tid3z
+r/IznH9JvRaIPsH5YOVTPsL5EYl+JRoHPsD5MBoAO4a40g==
+         "]], 
+         0.061894273127753294`], ArrowBox[BezierCurveBox[CompressedData["
+1:eJxTTMoPSmViYGCQAWIQDQEcDjC6fjHnD6lUNocHGUz73GayOzTv/pc0M4fF
+4eG6/RFq0uwO7B73HarFmByYLplfmNfK5iAzKUy58eg/e5dLWSobbrA6aNce
+XXVp0Q/7pesjQqNEWB2cA7klXh/5aK+RxZg814LFYZdMwLUp4U/szzCm+la6
+Mjvccd/tyFW+135CWbPIOysmh7qPaV86HtzZX3IiZsdvCUYH0TkPVsZ8f7j/
+ZNfjO08vMziEyPce6dr3ZL95w96PrY0MDhVMlqfOHX22f8+KV99uKzI4NLg+
+2aXB+2L/Ro5rN85n/rcvetE3bcaUF/tl1GqXBJf+s/d8bRErF/Ni/5aVpwKc
+0/7as/k94tuV/Hx/zeR9d+fZ/LFfJdC9Onv10/0ljyO80378sjcGg8f7Z80E
+gZ/28zZ2X7fPf7D//I2jr+eb/7A/x989pXH57f2fDyulPnj5zV4856BYzsFr
++9mjN7BGb/hqL1mxy9Re59J+9nl5Z/m7v9ivSH/z6Ov50/u/9sTu+Vf52X6K
+3cvJdi8P77+kXgtEn+wfvLz2Z4PHzv1g5VM+2v/TOtPJx7pif0SiX4nGgQ/2
+DCjggz0AZDbZ1A==
+         "]], 0.061894273127753294`], 
+        ArrowBox[{{3., 3.}, {5., 2.}}, 0.061894273127753294`], 
+        ArrowBox[BezierCurveBox[CompressedData["
+1:eJxTTMoPSmViYGCQAWIQDQEcDjD6pLJ28dc57HC6Y1aS7kNNBG2Zskzv8DI2
+OH2v4VvZbGEEXfYhiC2rgBVOs2zefUdvLwucbjlh8OvlT2Y4/dNgU9xsNQSd
++Maey9mZCU5rzl5lteEko4ORq5D65P2MDmfmvXqTFcfo8N6tc943U0YHj+//
+FYoZGR1mfFxSkLuMwWHOklfXTmxicNByTZ37XYDB4dSyVXw5RQwOAc1TPLVe
+/7O/9Nf+RIwDg4PSueW8PSv+2m9auYp5tgyDw4kslnaRqD/2uateHVBjZ3Bw
+j1y19fD/X/bQAHKYNRMEfsL5528cfT3f/Aec//mwUuqDl9/sGaF89ugNrNEb
+vsLl2eflneXv/gLnf+2J3fOv8jOcf0m9Fog+wflg5VM+wvkRiX4lGgc+wPkQ
+6oM9AEyfow4=
+         "]], 0.061894273127753294`], 
+        ArrowBox[{{3., 3.}, {3., 2.}}, 0.061894273127753294`], 
+        ArrowBox[{{3., 3.}, {4., 2.}}, 0.061894273127753294`], 
+        ArrowBox[{{5., 3.}, {5., 2.}}, 0.061894273127753294`], 
+        ArrowBox[BezierCurveBox[CompressedData["
+1:eJxTTMoPSmViYGCQAWIQDQEiDhCaw0EqL8ut1VDE4aSydvHXOewOezb5ZfJn
+izh0zErSfajJ7vD07JqMeWtEHCxTlukdXsbmMHF/i4vRNxGHew3fymYLszkc
+bb/255S7qEPZhyC2rAJWhzq1RRMzFoo6sGzefUdvL4vDvtnPmbiZxRxaThj8
+evmT2aHl+bKATTliDj8NNsXNVmN2OM/5oCrunphD4ht7LmdnJoesTaseqUuL
+Oxi5CqlP3s/oMGtDV+epAHGH926d876ZMjrEsjTku9WLO8z4uKQgdxmDw6a1
+XVNmLxN30HJNnftdgMFh9ppVP04eE3cIaJ7iqfX6n70E44PZF++LOyidW87b
+s+KvvfpqrbpNH8UdTmSxtItE/bE/taprfs4fcQf3yFVbD///ZQ8JFwmHWTNB
+4Kf9fzAQdzh/4+jr+eY/4PKfDyulPnj5zZ4RymeP3sAaveErXJ59Xt5Z/u4v
+cP7Xntg9/yo/w/mX1GuB6BOcD1Y+5SOcH5HoV6Jx4AOcD6E/2AMA+nisgw==
+
+         "]], 0.061894273127753294`], 
+        ArrowBox[{{6., 1.}, {3., 0.}}, 0.061894273127753294`], 
+        ArrowBox[{{2., 1.}, {3., 0.}}, 0.061894273127753294`], 
+        ArrowBox[{{3., 1.}, {3., 0.}}, 0.061894273127753294`], 
+        ArrowBox[{{7., 2.}, {6., 1.}}, 0.061894273127753294`], 
+        ArrowBox[{{6., 3.}, {7., 2.}}, 0.061894273127753294`], 
+        ArrowBox[{{7., 3.}, {7., 2.}}, 0.061894273127753294`], 
+        ArrowBox[{{3., 2.}, {3., 1.}}, 0.061894273127753294`], 
+        ArrowBox[{{4., 2.}, {3., 1.}}, 0.061894273127753294`]}, 
+       {Hue[0.6, 0.2, 0.8], EdgeForm[{GrayLevel[0], Opacity[
+        0.7]}], {DiskBox[{0., 2.}, 0.061894273127753294], 
+         InsetBox["\<\"iron-gear-wheel\"\>", 
+          Offset[{2, 2}, {0.061894273127753294, 2.0618942731277534}], 
+          ImageScaled[{0, 0}],
+          BaseStyle->"Graphics"]}, {DiskBox[{-2., 1.}, 0.061894273127753294], 
+         InsetBox["\<\"science-pack-1\"\>", Offset[{2, 2}, 
+          {-1.9381057268722468, 1.0618942731277532}], ImageScaled[{0, 0}],
+          BaseStyle->"Graphics"]}, {DiskBox[{5., 4.}, 0.061894273127753294], 
+         InsetBox["\<\"copper-plate\"\>", 
+          Offset[{2, 2}, {5.061894273127753, 4.061894273127753}], 
+          ImageScaled[{0, 0}],
+          BaseStyle->"Graphics"]}, {DiskBox[{1., 1.}, 0.061894273127753294], 
+         InsetBox["\<\"inserter\"\>", 
+          Offset[{2, 2}, {1.0618942731277532, 1.0618942731277532}], 
+          ImageScaled[{0, 0}],
+          BaseStyle->"Graphics"]}, {DiskBox[{0., 0.}, 0.061894273127753294], 
+         InsetBox["\<\"science-pack-2\"\>", 
+          Offset[{2, 2}, {0.061894273127753294, 0.061894273127753294}], 
+          ImageScaled[{0, 0}],
+          BaseStyle->"Graphics"]}, {DiskBox[{0., 1.}, 0.061894273127753294], 
+         InsetBox["\<\"transport-belt\"\>", 
+          Offset[{2, 2}, {0.061894273127753294, 1.0618942731277532}], 
+          ImageScaled[{0, 0}],
+          BaseStyle->"Graphics"]}, {DiskBox[{5., 2.}, 0.061894273127753294], 
+         InsetBox["\<\"electronic-circuit\"\>", 
+          Offset[{2, 2}, {5.061894273127753, 2.0618942731277534}], 
+          ImageScaled[{0, 0}],
+          BaseStyle->"Graphics"]}, {DiskBox[{3., 3.}, 0.061894273127753294], 
+         InsetBox["\<\"iron-plate\"\>", 
+          Offset[{2, 2}, {3.0618942731277534, 3.0618942731277534}], 
+          ImageScaled[{0, 0}],
+          BaseStyle->"Graphics"]}, {DiskBox[{5., 3.}, 0.061894273127753294], 
+         InsetBox["\<\"copper-cable\"\>", 
+          Offset[{2, 2}, {5.061894273127753, 3.0618942731277534}], 
+          ImageScaled[{0, 0}],
+          BaseStyle->"Graphics"]}, {DiskBox[{6., 1.}, 0.061894273127753294], 
+         InsetBox["\<\"advanced-circuit\"\>", 
+          Offset[{2, 2}, {6.061894273127753, 1.0618942731277532}], 
+          ImageScaled[{0, 0}],
+          BaseStyle->"Graphics"]}, {DiskBox[{3., 0.}, 0.061894273127753294], 
+         InsetBox["\<\"science-pack-3\"\>", 
+          Offset[{2, 2}, {3.0618942731277534, 0.061894273127753294}], 
+          ImageScaled[{0, 0}],
+          BaseStyle->"Graphics"]}, {DiskBox[{2., 1.}, 0.061894273127753294], 
+         InsetBox["\<\"electric-mining-drill\"\>", 
+          Offset[{2, 2}, {2.0618942731277534, 1.0618942731277532}], 
+          ImageScaled[{0, 0}],
+          BaseStyle->"Graphics"]}, {DiskBox[{3., 1.}, 0.061894273127753294], 
+         InsetBox["\<\"engine-unit\"\>", 
+          Offset[{2, 2}, {3.0618942731277534, 1.0618942731277532}], 
+          ImageScaled[{0, 0}],
+          BaseStyle->"Graphics"]}, {DiskBox[{7., 2.}, 0.061894273127753294], 
+         InsetBox["\<\"plastic-bar\"\>", 
+          Offset[{2, 2}, {7.061894273127753, 2.0618942731277534}], 
+          ImageScaled[{0, 0}],
+          BaseStyle->"Graphics"]}, {DiskBox[{6., 3.}, 0.061894273127753294], 
+         InsetBox["\<\"petroleum-gas\"\>", 
+          Offset[{2, 2}, {6.061894273127753, 3.0618942731277534}], 
+          ImageScaled[{0, 0}],
+          BaseStyle->"Graphics"]}, {DiskBox[{7., 3.}, 0.061894273127753294], 
+         InsetBox["\<\"coal\"\>", 
+          Offset[{2, 2}, {7.061894273127753, 3.0618942731277534}], 
+          ImageScaled[{0, 0}],
+          BaseStyle->"Graphics"]}, {DiskBox[{3., 2.}, 0.061894273127753294], 
+         InsetBox["\<\"pipe\"\>", 
+          Offset[{2, 2}, {3.0618942731277534, 2.0618942731277534}], 
+          ImageScaled[{0, 0}],
+          BaseStyle->"Graphics"]}, {DiskBox[{4., 2.}, 0.061894273127753294], 
+         InsetBox["\<\"steel-plate\"\>", 
+          Offset[{2, 2}, {4.061894273127753, 2.0618942731277534}], 
+          ImageScaled[{0, 0}],
+          BaseStyle->"Graphics"]}}}],
+     MouseAppearanceTag["NetworkGraphics"]],
+    AllowKernelInitialization->False]],
+  DefaultBaseStyle->{
+   "NetworkGraphics", FrontEnd`GraphicsHighlightColor -> Hue[0.8, 1., 0.6]},
+  FormatType->TraditionalForm,
+  FrameTicks->None,
+  ImageSize->{818., Automatic}]], "Output",
+ CellChangeTimes->{{3.7262242328943872`*^9, 3.726224309904786*^9}, 
+   3.726302442976098*^9, {3.7263024781554947`*^9, 3.7263024897289267`*^9}, {
+   3.726302557500341*^9, 3.726302594161334*^9}, {3.726302647893228*^9, 
+   3.726302653305524*^9}, 3.7263028940395203`*^9, 3.726302945073941*^9, 
+   3.726302983098833*^9}]
+}, Open  ]],
+
+Cell[BoxData[""], "Input",
+ CellChangeTimes->{{3.726219847073745*^9, 3.726219877022644*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"getDependencyGraph", "[", "\"\<rocket-part\>\"", "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"With", "[", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{"blacklist", "=", 
+      RowBox[{"{", "\[IndentingNewLine]", 
+       RowBox[{
+       "\"\<iron-plate\>\"", ",", "\"\<copper-plate\>\"", ",", 
+        "\"\<water\>\"", ",", "\"\<electronic-circuit\>\"", ",", 
+        "\[IndentingNewLine]", "\"\<petroleum-gas\>\"", ",", 
+        "\[IndentingNewLine]", "\"\<iron-gear-wheel\>\"", ",", 
+        "\"\<copper-cable\>\"", ","}], "\[IndentingNewLine]", "}"}]}], "}"}], 
+    ",", "\[IndentingNewLine]", 
+    RowBox[{"Select", "[", 
+     RowBox[{"%", ",", 
+      RowBox[{
+       RowBox[{"\[Not]", 
+        RowBox[{"Or", "[", "\[IndentingNewLine]", 
+         RowBox[{
+          RowBox[{"MemberQ", "[", 
+           RowBox[{"blacklist", ",", 
+            RowBox[{
+            "#", "\[LeftDoubleBracket]", "1", "\[RightDoubleBracket]"}]}], 
+           "]"}], ",", "\[IndentingNewLine]", 
+          RowBox[{"MemberQ", "[", 
+           RowBox[{"blacklist", ",", 
+            RowBox[{
+            "#", "\[LeftDoubleBracket]", "2", "\[RightDoubleBracket]"}]}], 
+           "]"}]}], "\[IndentingNewLine]", "]"}]}], "&"}]}], "]"}]}], "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{"Graph", "[", 
+  RowBox[{"%", ",", 
+   RowBox[{"VertexLabels", "\[Rule]", "\"\<Name\>\""}], ",", 
+   RowBox[{"AspectRatio", "\[Rule]", "Automatic"}]}], "]"}]}], "Input",
+ CellChangeTimes->{{3.7262243367294617`*^9, 3.726224385035347*^9}, {
+  3.726224500727569*^9, 3.7262245100693283`*^9}, {3.7263022330447817`*^9, 
+  3.7263022664062967`*^9}}],
+
+Cell[BoxData[
+ GraphicsBox[
+  NamespaceBox["NetworkGraphics",
+   DynamicModuleBox[{Typeset`graph = HoldComplete[
+     Graph[{
+      "rocket-control-unit", "rocket-part", "low-density-structure", 
+       "rocket-fuel", "processing-unit", "speed-module", "advanced-circuit", 
+       "sulfuric-acid", "plastic-bar", "coal", "sulfur", "steel-plate", 
+       "solid-fuel"}, {{{1, 2}, {3, 2}, {4, 2}, {5, 1}, {6, 1}, {7, 5}, {8, 
+       5}, {9, 7}, {10, 9}, {11, 8}, {7, 6}, {9, 3}, {12, 3}, {13, 4}}, 
+       Null}, {AspectRatio -> Automatic, VertexLabels -> {"Name"}}]]}, 
+    TagBox[GraphicsGroupBox[{
+       {Hue[0.6, 0.7, 0.5], Opacity[0.7], Arrowheads[Medium], 
+        ArrowBox[{{0., 1.}, {-1., 0.}}, 0.043048128342245986`], 
+        ArrowBox[{{-1., 1.}, {-1., 0.}}, 0.043048128342245986`], 
+        ArrowBox[{{-3., 1.}, {-1., 0.}}, 0.043048128342245986`], 
+        ArrowBox[{{1., 2.}, {0., 1.}}, 0.043048128342245986`], 
+        ArrowBox[{{0., 2.}, {0., 1.}}, 0.043048128342245986`], 
+        ArrowBox[{{0., 3.}, {1., 2.}}, 0.043048128342245986`], 
+        ArrowBox[{{0., 3.}, {0., 2.}}, 0.043048128342245986`], 
+        ArrowBox[{{1., 3.}, {1., 2.}}, 0.043048128342245986`], 
+        ArrowBox[BezierCurveBox[CompressedData["
+1:eJxTTMoPSmViYGBQBWIQDQEf9kNoAQcYP/j8jaOv5/PD+Rs9JCt2mfI7MEL5
+EjkHxXIO8sHlWy0vLmRwRvD/bABp4IXz6y6p115SR/DZ5uWd5e/mgfNnCMty
+GTzhhvONwQDBvwjSXssF5xfJHC+UOc4Jd4+wIAhwwuU3sEYDEQecH/Brif+v
+Jexw/vt3IMAG5/c9tgAiBF/vRpPujSZWON8E7B5mOP8K2D1McH4h2D2McPcI
+gd3DiAg/sHsY4PwFXzznf/H8bw/j37sLAn/hfFmQcYV/4PwYsId+w/mzZoLA
+TzgfHF3mP+D8z4eVUh+8/GYPcw87yPoNX+Hy7ODw/wLnf+2J3fOv8jOcD46u
+2k9wPlj5lI9wfkSiX4nGgQ9wPpS2BwCvPrrN
+         "]], 0.043048128342245986`], 
+        ArrowBox[{{-1., 4.}, {0., 3.}}, 0.043048128342245986`], 
+        ArrowBox[{{-1., 5.}, {-1., 4.}}, 0.043048128342245986`], 
+        ArrowBox[{{1., 4.}, {1., 3.}}, 0.043048128342245986`], 
+        ArrowBox[{{-2., 2.}, {-1., 1.}}, 0.043048128342245986`], 
+        ArrowBox[{{-3., 2.}, {-3., 1.}}, 0.043048128342245986`]}, 
+       {Hue[0.6, 0.2, 0.8], EdgeForm[{GrayLevel[0], Opacity[
+        0.7]}], {DiskBox[{0., 1.}, 0.043048128342245986], 
+         InsetBox["\<\"rocket-control-unit\"\>", 
+          Offset[{2, 2}, {0.043048128342245986, 1.043048128342246}], 
+          ImageScaled[{0, 0}],
+          BaseStyle->"Graphics"]}, {DiskBox[{-1., 0.}, 0.043048128342245986], 
+         InsetBox["\<\"rocket-part\"\>", 
+          Offset[{2, 2}, {-0.956951871657754, 0.043048128342245986}], 
+          ImageScaled[{0, 0}],
+          BaseStyle->"Graphics"]}, {DiskBox[{-1., 1.}, 0.043048128342245986], 
+         InsetBox["\<\"low-density-structure\"\>", 
+          Offset[{2, 2}, {-0.956951871657754, 1.043048128342246}], 
+          ImageScaled[{0, 0}],
+          BaseStyle->"Graphics"]}, {DiskBox[{-3., 1.}, 0.043048128342245986], 
+         InsetBox["\<\"rocket-fuel\"\>", 
+          Offset[{2, 2}, {-2.956951871657754, 1.043048128342246}], 
+          ImageScaled[{0, 0}],
+          BaseStyle->"Graphics"]}, {DiskBox[{1., 2.}, 0.043048128342245986], 
+         InsetBox["\<\"processing-unit\"\>", 
+          Offset[{2, 2}, {1.043048128342246, 2.043048128342246}], 
+          ImageScaled[{0, 0}],
+          BaseStyle->"Graphics"]}, {DiskBox[{0., 2.}, 0.043048128342245986], 
+         InsetBox["\<\"speed-module\"\>", 
+          Offset[{2, 2}, {0.043048128342245986, 2.043048128342246}], 
+          ImageScaled[{0, 0}],
+          BaseStyle->"Graphics"]}, {DiskBox[{0., 3.}, 0.043048128342245986], 
+         InsetBox["\<\"advanced-circuit\"\>", 
+          Offset[{2, 2}, {0.043048128342245986, 3.043048128342246}], 
+          ImageScaled[{0, 0}],
+          BaseStyle->"Graphics"]}, {DiskBox[{1., 3.}, 0.043048128342245986], 
+         InsetBox["\<\"sulfuric-acid\"\>", 
+          Offset[{2, 2}, {1.043048128342246, 3.043048128342246}], 
+          ImageScaled[{0, 0}],
+          BaseStyle->"Graphics"]}, {DiskBox[{-1., 4.}, 0.043048128342245986], 
+         InsetBox["\<\"plastic-bar\"\>", 
+          Offset[{2, 2}, {-0.956951871657754, 4.043048128342246}], 
+          ImageScaled[{0, 0}],
+          BaseStyle->"Graphics"]}, {DiskBox[{-1., 5.}, 0.043048128342245986], 
+         InsetBox["\<\"coal\"\>", 
+          Offset[{2, 2}, {-0.956951871657754, 5.043048128342246}], 
+          ImageScaled[{0, 0}],
+          BaseStyle->"Graphics"]}, {DiskBox[{1., 4.}, 0.043048128342245986], 
+         InsetBox["\<\"sulfur\"\>", 
+          Offset[{2, 2}, {1.043048128342246, 4.043048128342246}], 
+          ImageScaled[{0, 0}],
+          BaseStyle->"Graphics"]}, {DiskBox[{-2., 2.}, 0.043048128342245986], 
+         InsetBox["\<\"steel-plate\"\>", 
+          Offset[{2, 2}, {-1.956951871657754, 2.043048128342246}], 
+          ImageScaled[{0, 0}],
+          BaseStyle->"Graphics"]}, {DiskBox[{-3., 2.}, 0.043048128342245986], 
+         InsetBox["\<\"solid-fuel\"\>", 
+          Offset[{2, 2}, {-2.956951871657754, 2.043048128342246}], 
+          ImageScaled[{0, 0}],
+          BaseStyle->"Graphics"]}}}],
+     MouseAppearanceTag["NetworkGraphics"]],
+    AllowKernelInitialization->False]],
+  DefaultBaseStyle->{
+   "NetworkGraphics", FrontEnd`GraphicsHighlightColor -> Hue[0.8, 1., 0.6]},
+  FormatType->TraditionalForm,
+  FrameTicks->None]], "Output",
+ CellChangeTimes->{{3.7263022421240597`*^9, 3.726302266835043*^9}, 
+   3.7263023988127327`*^9, {3.726302573226616*^9, 3.726302594189842*^9}, {
+   3.726302649283373*^9, 3.726302655913083*^9}, 3.726302894111342*^9}]
+}, Open  ]]
+}, Open  ]]
+},
+WindowSize->{741, 497},
+WindowMargins->{{Automatic, 17}, {49, Automatic}},
+FrontEndVersion->"11.0 for Linux x86 (64-bit) (September 21, 2016)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[558, 20, 183, 3, 32, "Input"],
+Cell[744, 25, 932, 18, 57, "Input"],
+Cell[1679, 45, 2085, 42, 285, "Input"],
+Cell[3767, 89, 2370, 50, 261, "Input"],
+Cell[6140, 141, 2221, 55, 149, "Input"],
+Cell[8364, 198, 503, 12, 57, "Input"],
+Cell[8870, 212, 2450, 57, 307, "Input"],
+Cell[CellGroupData[{
+Cell[11345, 273, 87, 1, 65, "Section"],
+Cell[CellGroupData[{
+Cell[11457, 278, 2252, 49, 239, "Input"],
+Cell[13712, 329, 10264, 182, 379, "Output"]
+}, Open  ]],
+Cell[23991, 514, 92, 1, 32, InheritFromParent],
+Cell[CellGroupData[{
+Cell[24108, 519, 1659, 40, 263, "Input"],
+Cell[25770, 561, 5417, 97, 361, "Output"]
+}, Open  ]]
+}, Open  ]]
+}
+]
+*)
+

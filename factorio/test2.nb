@@ -1,0 +1,130 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 11.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[      3342,        122]
+NotebookOptionsPosition[      2675,         93]
+NotebookOutlinePosition[      3016,        108]
+CellTagsIndexPosition[      2973,        105]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[BoxData[
+ RowBox[{"assoc", "=", 
+  RowBox[{"<|", 
+   RowBox[{
+    RowBox[{"\"\<a\>\"", "\[Rule]", "1"}], ",", 
+    RowBox[{"\"\<b\>\"", "\[Rule]", "2"}], ",", 
+    RowBox[{"\"\<c\>\"", "\[Rule]", "3"}]}], "|>"}]}]], "Input",
+ CellChangeTimes->{{3.726389098499939*^9, 3.726389123129438*^9}}],
+
+Cell[BoxData[
+ RowBox[{"\[LeftAssociation]", 
+  RowBox[{
+   RowBox[{"\<\"a\"\>", "\[Rule]", "1"}], ",", 
+   RowBox[{"\<\"b\"\>", "\[Rule]", "2"}], ",", 
+   RowBox[{"\<\"c\"\>", "\[Rule]", "3"}]}], "\[RightAssociation]"}]], "Output",\
+
+ CellChangeTimes->{3.726389124383024*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"KeyExistsQ", "[", 
+  RowBox[{"assoc", ",", "\"\<a\>\""}], "]"}]], "Input",
+ CellChangeTimes->{{3.726389143173292*^9, 3.7263891485110283`*^9}}],
+
+Cell[BoxData["True"], "Output",
+ CellChangeTimes->{3.72638914880179*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(", 
+   RowBox[{"KeyExistsQ", " ", "@", " ", "assoc"}], ")"}], "[", "\"\<a\>\"", 
+  "]"}]], "Input",
+ CellChangeTimes->{{3.726389164991036*^9, 3.7263891779377613`*^9}}],
+
+Cell[BoxData[
+ TemplateBox[{
+  "KeyExistsQ","invrl",
+   "\"The argument \\!\\(\\*RowBox[{\\\"\\\\\\\"a\\\\\\\"\\\"}]\\) is not a \
+valid Association or a list of rules.\"",2,28,9,32752444920974513035,"Local"},
+  
+  "MessageTemplate"]], "Message", "MSG",
+ CellChangeTimes->{{3.726389173934066*^9, 3.726389178801838*^9}}],
+
+Cell[BoxData["False"], "Output",
+ CellChangeTimes->{{3.726389166068253*^9, 3.726389178807952*^9}}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"And", " ", "@@", " ", 
+  RowBox[{"Map", "[", "\n", "  ", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"KeyExistsQ", " ", "[", 
+      RowBox[{"assoc", ",", "#"}], "]"}], "&"}], ",", " ", 
+    RowBox[{"{", 
+     RowBox[{"\"\<a\>\"", ",", " ", "\"\<b\>\""}], "}"}]}], "\n", 
+   "]"}]}]], "Input",
+ CellChangeTimes->{{3.726389086104671*^9, 3.72638912825308*^9}, {
+  3.7263892190669003`*^9, 3.726389228794685*^9}}],
+
+Cell[BoxData["True"], "Output",
+ CellChangeTimes->{3.726389128711176*^9, 3.7263892293951483`*^9}]
+}, Open  ]]
+},
+WindowSize->{1125, 1014},
+WindowMargins->{{17, Automatic}, {Automatic, 17}},
+FrontEndVersion->"11.0 for Linux x86 (64-bit) (September 21, 2016)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[580, 22, 295, 7, 34, "Input"],
+Cell[878, 31, 276, 7, 34, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[1191, 43, 166, 3, 34, "Input"],
+Cell[1360, 48, 72, 1, 32, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[1469, 54, 203, 5, 32, "Input"],
+Cell[1675, 61, 319, 7, 23, "Message"],
+Cell[1997, 70, 98, 1, 32, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[2132, 76, 427, 11, 78, "Input"],
+Cell[2562, 89, 97, 1, 32, "Output"]
+}, Open  ]]
+}
+]
+*)
+
